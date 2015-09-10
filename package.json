@@ -1,0 +1,31 @@
+{
+  "name": "ritz",
+  "version": "0.0.1",
+  "description": "A swank-like server implementation for Node.js",
+  "main": "lib.js",
+  "scripts": {
+    "test": "mocha",
+    "install": "node-gyp rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dutch/ritz.git"
+  },
+  "keywords": [
+    "swank"
+  ],
+  "author": "Chris Lamberson <clamberson@gmail.com>",
+  "license": "LGPL-3.0+",
+  "gypfile": true,
+  "bugs": {
+    "url": "https://github.com/dutch/ritz/issues"
+  },
+  "homepage": "https://github.com/dutch/ritz#readme",
+  "devDependencies": {
+    "chai": "^3.2.0",
+    "mocha": "^2.3.2"
+  },
+  "dependencies": {
+    "node-gyp": "^3.0.1"
+  }
+}
