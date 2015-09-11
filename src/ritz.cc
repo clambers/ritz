@@ -17,14 +17,30 @@
  * License along with Ritz. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "exceptions.hh"
+#include "netstream.hh"
+
 #include <node.h>
+
+#include <exception>
 
 namespace ritz {
   using namespace v8;
 
   void create_server(FunctionCallbackInfo<Value> const& args) {
-    Isolate* iso = args.GetIsolate();
-    args.GetReturnValue().Set(String::NewFromUtf8(iso, "Hello world!"));
+    Isolate* iso;
+
+    iso = args.GetIsolate();
+
+    try {
+      sockbuf sb;
+      sb.bind(nullptr, "4005");
+    } catch (std::exception const& e) {
+      iso->ThrowException(Exception::Error(String::NewFromUtf8(iso, e.what())));
+      return;
+    }
+
+    args.GetReturnValue().Set(String::NewFromUtf8(iso, "no errors"));
   }
 
   void init(Local<Object> exports) {

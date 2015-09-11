@@ -1,3 +1,6 @@
+#ifndef NETSTREAM_HH
+#define NETSTREAM_HH
+
 /**
  * Copyright (C) 2015 Chris Lamberson.
  *
@@ -20,12 +23,10 @@
 #include "exceptions.hh"
 
 #include <unistd.h>
-#include <sys/types.h>
-#include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <netdb.h>
 #include <string.h>
+
 #include <iostream>
 #include <string>
 
@@ -70,7 +71,7 @@ namespace ritz {
 
     virtual ~basic_sockbuf() {
       try {
-        this->close(sd);
+        this->close();
       } catch (std::exception const& e) {}
     }
 
@@ -107,8 +108,8 @@ namespace ritz {
         if (setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1)
           throw runtime_error("setsockopt failed");
 
-        if (bind(sd, p->ai_addr, p->ai_addrlen) == -1) {
-          close(sd);
+        if (::bind(sd, p->ai_addr, p->ai_addrlen) == -1) {
+          ::close(sd);
           continue;
         }
 
@@ -116,6 +117,14 @@ namespace ritz {
       }
 
       this->sd = sd;
+
+      return this;
+    }
+
+    void close() {
+      ::close(sd);
+      boundp = false;
+      sd = 0;
     }
 
   private:
@@ -126,3 +135,5 @@ namespace ritz {
   using sockbuf = basic_sockbuf<char>;
   using wsockbuf = basic_sockbuf<wchar_t>;
 }
+
+#endif
